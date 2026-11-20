@@ -11,7 +11,7 @@ def agregar_cabeceras_seguridad(response):
     response.headers['Content-Security-Policy'] = "default-src 'self'"
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'DENY'
-    return response
+    return responsegit add app.py requirements.txt
 
 @app.route('/hello')
 def hello():
