@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'securedev-produccion'
+    static_configs:
+      - targets: ['app-securedev-prod:5000']
