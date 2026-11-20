@@ -1,8 +1,10 @@
 import os
 from flask import Flask, request
 from markupsafe import escape
+from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
+metrics = PrometheusMetrics(app)
 
 @app.after_request
 def agregar_cabeceras_seguridad(response):
@@ -21,5 +23,3 @@ if __name__ == '__main__':
     debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
     host = os.getenv('FLASK_HOST', '127.0.0.1')
     app.run(host=host, port=5000, debug=debug_mode)
-
-    #Carla Villegas
