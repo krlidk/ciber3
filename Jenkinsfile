@@ -11,9 +11,7 @@ pipeline {
 
         stage('Revisión SAST (Bandit)') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                    bat 'docker run --rm app-securedev:latest bandit -r app.py'
-                }
+                bat 'docker run --rm app-securedev:latest bandit -r app.py'
             }
         }
 
@@ -25,15 +23,12 @@ pipeline {
 
         stage('Pruebas Unitarias y de Seguridad') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                    bat 'docker run --rm app-securedev:latest pytest'
-                }
+                bat 'docker run --rm app-securedev:latest pytest'
             }
         }
 
         stage('Pruebas DAST (OWASP ZAP)') {
             steps {
-                echo 'Ejecutando escaneo activo y pasivo con OWASP ZAP sobre codigo vulnerable...'
                 bat '''
                     del /f /q zap_report.html || ver > nul
                     docker network create zap-net || ver > nul
@@ -48,8 +43,11 @@ pipeline {
 
         stage('Despliegue') {
             steps {
-                bat 'docker rm -f app-securedev-prod || ver > nul'
-                bat 'docker run -d --name app-securedev-prod -p 5000:5000 app-securedev:latest'
+                bat '''
+                    docker network create monitoring || ver > nul
+                    docker rm -f app-securedev-prod || ver > nul
+                    docker run -d --name app-securedev-prod --network monitoring -p 5000:5000 app-securedev:latest
+                '''
             }
         }
     }
