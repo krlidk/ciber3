@@ -4,6 +4,8 @@ WORKDIR /app
 
 ENV FLASK_HOST=0.0.0.0
 
+RUN pip install --no-cache-dir --upgrade pip setuptools
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
